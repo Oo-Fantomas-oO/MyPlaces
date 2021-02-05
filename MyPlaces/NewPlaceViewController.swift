@@ -9,10 +9,11 @@ import UIKit
 
 class NewPlaceViewController: UITableViewController {
 
+    @IBOutlet weak var imageOfPlaces: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
         
+        tableView.tableFooterView = UIView()
     }
 
     //MARK: - Table view delegate
@@ -49,14 +50,22 @@ extension NewPlaceViewController: UITextFieldDelegate {
 }
 
 //MARK: - Work with image
-extension NewPlaceViewController {
+extension NewPlaceViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func chooseImagePicker(sourse: UIImagePickerController.SourceType){
         if UIImagePickerController.isSourceTypeAvailable(sourse) {
             let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
             imagePicker.allowsEditing = true
             imagePicker.sourceType = sourse
             present(imagePicker, animated: true, completion: nil)
         }
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        imageOfPlaces.image = info[.editedImage] as? UIImage
+        imageOfPlaces.contentMode = .scaleAspectFill
+        imageOfPlaces.clipsToBounds = true
+        dismiss(animated: true, completion: nil)
     }
 }
